@@ -165,8 +165,8 @@ class FormularioReuniones(admin.ModelAdmin):
 	#print(ReuFormSet)
 	#formset = formBase
 	#save_on_top = True -> Agregar botones en parte superior
-	list_display = ['organizador',  'asunto', 'fecha_hora', 'idTipo', 'idLugar', 'tiempo_estimado', 'hora_final',]
-	list_display_links =['organizador', 'asunto']
+	list_display = ['organizador',  'asunto', 'fecha_hora', 'idTipo', 'idLugar', 'tiempo_estimado', 'hora_final', 'link']
+	list_display_links =['organizador',]
 	search_fields = ['organizador', 'fecha_hora', 'tiempo_estimado', 'hora_final', 'asunto']
 	list_filter = ['organizador', 'fecha_hora', 'idTipo', 'idLugar', ]
 	#enviar = envio_correo

@@ -4,6 +4,10 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.utils.safestring import mark_safe
+from django.contrib.auth import get_user_model
+
+
 
 #User = get_user_model()
 # Create your models here.
@@ -76,16 +80,26 @@ class Reuniones(models.Model):
 		(5, 5),
 	)
 
+	def get_user(self, user_id):
+		UserModel = get_user_model()
+		try:
+			return UserModel._default_manager.get(pk=user_id)
+		except UserModel.DoesNotExist:
+			return None
+
+
+
+
 
 	IdReunion = models.AutoField(primary_key=True, verbose_name="Numero de Citacion")
-	organizador = models.CharField(max_length=50)
+	organizador = models.CharField(max_length=50, default='')
 	fecha_hora = models.DateTimeField()
 	tiempo_estimado = models.IntegerField(null=True, choices=CANTIDADHORAS, help_text='Numero de Horas')
 	asunto = models.CharField(max_length=100)
 	idTipo = models.ForeignKey(TipoReunion, on_delete=models.CASCADE, null=True,  verbose_name="Tipo Reunion")
 	idLugar = models.ForeignKey(Lugar, on_delete=models.CASCADE, null=True,  verbose_name="Lugar Reunion")
 	hora_final = models.TimeField(help_text='HH24:MM:SS')
-	idEstado = models.CharField(max_length=2, null=True, blank=True,  verbose_name="Estado Reunion", default='Citacion')
+	idEstado = models.CharField(max_length=2, null=True, blank=True,  verbose_name="Estado Reunion", default='C')
 	#padrehijo = models.ForeignKey(padrereuniones, on_delete=models.CASCADE, null=True, blank=True,)
 	fecha_creacion = models.DateField(auto_now_add=True)
 	usuario_creador = models.CharField(max_length=50)
@@ -103,6 +117,11 @@ class Reuniones(models.Model):
 	def __init__(self, *args, **kwargs):
 		super(Reuniones, self).__init__(*args, **kwargs)
 		self.__total__ = None
+
+	def link(self):
+		return mark_safe(u'<a href="3/change">Iniciar Reunion</a>')
+		#return mark_safe(u'<button type="submit" value="iniciar" onclick=" location = '/change'" >iniciar</button>')
+	link.allow_tags = True
 
 
 class temasdos(models.Model):
@@ -135,6 +154,7 @@ class asistentes(models.Model):
 	#correo = User.objects.get(first_name=user)
 	#print(correo.email)
 	#correo.mail
+
 	idasis = models.AutoField(primary_key=True)
 	user = models.ForeignKey(User, null=True, blank=True, verbose_name='Asistente')
 	email = models.EmailField(max_length=50, null=True, blank=True, verbose_name='Correo', default='@unipanamericana.edu.co')
