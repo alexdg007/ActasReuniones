@@ -24,6 +24,8 @@ from django.forms import formset_factory, modelformset_factory
 
 
 
+#"AQUI TOY"
+
 #class tareas(admin.TabularInline):
 #	model = Tarea
 #	fields = ('descripcion', 'responsable', 'fecha_limite', 'observaciones', 'cumplido')

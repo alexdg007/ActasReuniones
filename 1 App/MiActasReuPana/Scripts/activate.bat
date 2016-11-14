@@ -1,5 +1,5 @@
 @echo off
-set "VIRTUAL_ENV=C:\Users\Alex Guzman\App1\MiActasReuPana"
+set "VIRTUAL_ENV=C:\Users\dandi_000\Proyecto\ActasReuniones\1 App\MiActasReuPana"
 
 if not defined PROMPT (
     set "PROMPT=$P$G"
