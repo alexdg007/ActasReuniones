@@ -102,8 +102,8 @@ DATABASES = {
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'ProdReuActa',
-        'USER': 'postgres',
-        'PASSWORD': 'root123',
+        'USER': 'Admin',
+        'PASSWORD': 'Actas1234.',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
@@ -164,3 +164,5 @@ EMAIL_HOST_USER = 'adguzman@unipanamericana.edu.co'
 EMAIL_HOST_PASSWORD = '1921Guzman'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+# Alex esto funciona al pelo
