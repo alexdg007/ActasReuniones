@@ -186,7 +186,7 @@ class FormularioReuniones(admin.ModelAdmin):
 				return self.org
 
 
-
+#configuracion para consulta de temas
 class temasconsulta(admin.ModelAdmin):
 	model = temasdos
 	list_display = ['nombre', 'Contenido', 'Acuerdos', ]
