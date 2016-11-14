@@ -14,3 +14,6 @@ class RegisReuniones(forms.ModelForm):
 	class Meta:
 		model = Reuniones
 		fields = ('organizador', 'idTipo', 'idLugar', 'tiempo_estimado', 'asunto')
+
+		def __init__(self):
+			print (self.cleaned_data)

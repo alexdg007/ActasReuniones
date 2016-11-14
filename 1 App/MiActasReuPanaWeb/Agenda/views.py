@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.http import HttpResponse
@@ -20,22 +21,6 @@ from .forms import RegisReuniones
 from django.contrib.auth.models import User
 from django.forms import BaseFormSet, BaseModelFormSet
 from django.forms import formset_factory, modelformset_factory
-
-
-
-
-#"AQUI TOY"
-
-#class tareas(admin.TabularInline):
-#	model = Tarea
-#	fields = ('descripcion', 'responsable', 'fecha_limite', 'observaciones', 'cumplido')
-#	extra = 0
-
-#class Tema(admin.TabularInline):
-#	model = Tema.tema_id.through
-#	#fields = ('reu_id',)
-#	#inlines = (tareas)
-#	extra = 0
 
 
 #class FormularioReuniones(admin.ModelAdmin):
@@ -107,7 +92,7 @@ class tiposreuniones(admin.ModelAdmin):
 class estadosreuniones(admin.ModelAdmin):
 	fields = ('NombreEstado', )
 
-
+#class asistentesreunion(admin.StackedInline, SortableInline):
 class asistentesreunion(admin.TabularInline):
 	model = asistentes
 	#user = request.user.get_full_name()
@@ -115,6 +100,11 @@ class asistentesreunion(admin.TabularInline):
 	fields = ('user', 'email')
 	#fields = ('user', 'email', 'asiste', 'firma')
 	extra = 0
+
+	def formfield_for_foreignkey(self, db_field, request, **kwargs):
+		if db_field.name == 'user':
+			kwargs['queryset'] = User.objects.filter(is_active='t').order_by('first_name')
+		return super(asistentesreunion, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 	#def formfield_for_foreignkey(self, db_field, request, **kwargs):
 	#	if db_field.name == 'first_name':
@@ -133,6 +123,11 @@ class TareasReu(admin.StackedInline, SortableInline):
 	fields = ('nombretarea', 'descripcion', 'resposable', 'fecha_limite', 'observaciones', 'IdEstadoTarea')
 	extra = 0
 
+	def formfield_for_foreignkey(self, db_field, request, **kwargs):
+		if db_field.name == 'resposable':
+			kwargs['queryset'] = asistentes.objects.filter(idReunion=1)
+		return super(TareasReu, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 #class temasdosp(admin.TabularInline):
 class temasdosp(admin.StackedInline, SortableInline):
 	model = temasdos
@@ -146,6 +141,7 @@ class temasdosp(admin.StackedInline, SortableInline):
 class FormularioReuniones(admin.ModelAdmin):
 	form = RegisReuniones
 	#model = Reuniones
+
 	formset = ReuBaseFormSet
 	inlines = [
 		temasdosp, asistentesreunion, TareasReu
@@ -153,7 +149,7 @@ class FormularioReuniones(admin.ModelAdmin):
 		]
 		#exclude = ('idTema',)
 	fieldsets = (
-		('Agendamiento y Registro de Reunion', {
+		('Agendamiento y Registro de Reunión', {
 			'fields': ['organizador', 'fecha_hora', 'idTipo', 'idLugar', 'tiempo_estimado', 'hora_final', 'asunto', 'idEstado'] #'citacion',
 		}),
 		#('Temas, Contenido, Acuerdos', {
@@ -167,7 +163,7 @@ class FormularioReuniones(admin.ModelAdmin):
 	#print(ReuFormSet)
 	#formset = formBase
 	#save_on_top = True -> Agregar botones en parte superior
-	list_display = ['organizador',  'asunto', 'fecha_hora', 'idTipo', 'idLugar', 'tiempo_estimado', 'hora_final', 'link']
+	list_display = ['organizador',  'asunto', 'fecha_hora', 'idTipo', 'idLugar', 'tiempo_estimado', 'hora_final', 'link',]
 	list_display_links =['organizador',]
 	search_fields = ['organizador', 'fecha_hora', 'tiempo_estimado', 'hora_final', 'asunto']
 	list_filter = ['organizador', 'fecha_hora', 'idTipo', 'idLugar', ]

@@ -1,5 +1,5 @@
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.utils.translation import ugettext_lazy as _
@@ -30,7 +30,7 @@ class TipoReunion(models.Model):
 	usuario_modificador = models.CharField(max_length=50)
 
 	class Meta:
-		verbose_name = _('Tipo Reunion')
+		verbose_name = _('Tipo Reunión')
 		verbose_name_plural = _('1. Tipos Reuniones ')
 
 	def __str__ (self): # __unicode__ on Python 2
@@ -87,19 +87,15 @@ class Reuniones(models.Model):
 		except UserModel.DoesNotExist:
 			return None
 
-
-
-
-
-	IdReunion = models.AutoField(primary_key=True, verbose_name="Numero de Citacion")
+	IdReunion = models.AutoField(primary_key=True, verbose_name="Numero de Citación")
 	organizador = models.CharField(max_length=50, default='')
 	fecha_hora = models.DateTimeField()
 	tiempo_estimado = models.IntegerField(null=True, choices=CANTIDADHORAS, help_text='Numero de Horas')
 	asunto = models.CharField(max_length=100)
-	idTipo = models.ForeignKey(TipoReunion, on_delete=models.CASCADE, null=True,  verbose_name="Tipo Reunion")
+	idTipo = models.ForeignKey(TipoReunion, on_delete=models.CASCADE, null=True,  verbose_name="Tipo Reunión")
 	idLugar = models.ForeignKey(Lugar, on_delete=models.CASCADE, null=True,  verbose_name="Lugar Reunion")
 	hora_final = models.TimeField(help_text='HH24:MM:SS')
-	idEstado = models.CharField(max_length=2, null=True, blank=True,  verbose_name="Estado Reunion", default='C')
+	idEstado = models.CharField(max_length=2, null=True, blank=True,  verbose_name="Estado Reunión", default='C')
 	#padrehijo = models.ForeignKey(padrereuniones, on_delete=models.CASCADE, null=True, blank=True,)
 	fecha_creacion = models.DateField(auto_now_add=True)
 	usuario_creador = models.CharField(max_length=50)
@@ -107,21 +103,23 @@ class Reuniones(models.Model):
 	usuario_modificador = models.CharField(max_length=50)
 
 	class Meta:
-		verbose_name = _('Reunion')
+		verbose_name = _('Reunión')
 		verbose_name_plural = _('Reuniones')
 
 
 	def __str__ (self): # __unicode__ on Python 2
 		return str(self.asunto)
 
-	def __init__(self, *args, **kwargs):
-		super(Reuniones, self).__init__(*args, **kwargs)
-		self.__total__ = None
+	#def __init__(self, *args, **kwargs):
+	#	super(Reuniones, self).__init__(*args, **kwargs)
+	#	self.__total__ = None
 
 	def link(self):
-		return mark_safe(u'<a href="3/change">Iniciar Reunion</a>')
+		estado = 'Reunion'
+		return mark_safe(u"<a href="+ str(self.IdReunion) +"/change"'>Iniciar Reunión</a>')
 		#return mark_safe(u'<button type="submit" value="iniciar" onclick=" location = '/change'" >iniciar</button>')
 	link.allow_tags = True
+
 
 
 class temasdos(models.Model):
@@ -196,4 +194,4 @@ class tareas(models.Model):
 		#a = b.first_name + ' ' + b.last_name
 		#a = request.user.get_full_name()
 		#return str(self.user.first_name+' '+user.last_name+' - '+user.email)
-		return str(self.nombretarea)
+		return str(self.nombretarea, self.responsable, self.idReunion)
